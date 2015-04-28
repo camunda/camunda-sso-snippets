@@ -1,0 +1,11 @@
+<!DOCTYPE jboss-web PUBLIC
+        "-//JBoss//DTD Web Application 2.4//EN"
+        "http://www.jboss.org/j2ee/dtd/jboss-web_4_0.dtd">
+
+<jboss-web>
+    <security-domain>java:/jaas/SPNEGO</security-domain>
+    <valve>
+        <class-name>org.jboss.security.negotiation.NegotiationAuthenticator</class-name>
+    </valve>
+    <context-root>/camunda</context-root>
+</jboss-web>
