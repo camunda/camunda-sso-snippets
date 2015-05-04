@@ -55,9 +55,9 @@
 
     <!-- replace YOUR_REPOSITORY_ID with your repository name -->
     <scm>
-        <connection>scm:git:git@github.com:eberhardheber/camunda-jboss-sso.git</connection>
-        <url>scm:git:git@github.com:eberhardheber/camunda-jboss-sso.git</url>
-        <developerConnection>scm:git:git@github.com:eberhardheber/camunda-jboss-sso.git</developerConnection>
+        <connection>scm:git:git@github.com:camunda/camunda-jboss-sso.git</connection>
+        <url>scm:git:git@github.com:camunda/camunda-jboss-sso.git</url>
+        <developerConnection>scm:git:git@github.com:camunda/camunda-jboss-sso.git</developerConnection>
         <tag>HEAD</tag>
     </scm>
 
