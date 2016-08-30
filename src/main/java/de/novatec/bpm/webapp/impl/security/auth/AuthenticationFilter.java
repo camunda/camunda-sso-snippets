@@ -93,7 +93,10 @@ public class AuthenticationFilter implements Filter {
                     }
                     authorizedApps.add("admin");
                     if (authorizedApps.contains(appName)) {
-                        UserAuthentication newAuthentication = new UserAuthentication(username, groupIds, engineName, authorizedApps);
+                        UserAuthentication newAuthentication = new UserAuthentication(username, engineName);
+                        newAuthentication.setGroupIds(groupIds);
+                        newAuthentication.setAuthorizedApps(authorizedApps);
+
                         authentications.addAuthentication(newAuthentication);
                     }
                 }
@@ -130,10 +133,6 @@ public class AuthenticationFilter implements Filter {
     }
 
     @Override
-    private boolean isApp(String url) {
-        return url.contains("/app/");
-    }
-
     public void doFilter(final ServletRequest request, final ServletResponse response, final FilterChain chain) throws IOException, ServletException {
         final HttpServletRequest req = (HttpServletRequest) request;
 

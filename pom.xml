@@ -4,19 +4,14 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.camunda.bpm.extension</groupId>
-    <artifactId>camunda-bpm-sso-jboss</artifactId>
+    <artifactId>camunda-webapp-ee-wls-sso</artifactId>
     <version>1.0.0-SNAPSHOT</version>
 
-    <modules>
-        <module>camunda-bpm-repackage-webapp</module>
-		<module>camunda-bpm-build-webapp</module>
-    </modules>
-
-    <packaging>pom</packaging>
+	<packaging>war</packaging>
 
     <properties>
         <classes.dir>${build.directory}/extracted-camunda-webapp</classes.dir>
-        <camunda.version>7.2.0</camunda.version>
+        <camunda.version>7.5.3-ee</camunda.version>
     </properties>
 
     <parent>
@@ -26,22 +21,136 @@
         <relativePath/>
     </parent>
 
+	<dependencies>
+
+		<dependency>
+			<groupId>org.jboss.spec</groupId>
+			<artifactId>jboss-javaee-web-6.0</artifactId>
+			<version>3.0.2.Final</version>
+			<type>pom</type>
+			<scope>provided</scope>
+			<exclusions>
+				<exclusion>
+					<artifactId>xalan</artifactId>
+					<groupId>org.apache.xalan</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<dependency>
+			<groupId>org.camunda.bpm.webapp</groupId>
+			<artifactId>camunda-webapp</artifactId>
+			<version>${camunda.version}</version>
+      <classifier>classes</classifier>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.camunda.bpm</groupId>
+			<artifactId>camunda-engine-rest</artifactId>
+			<classifier>classes</classifier>
+			<version>${camunda.version}</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.camunda.bpm</groupId>
+			<artifactId>camunda-engine</artifactId>
+			<version>${camunda.version}</version>
+			<scope>provided</scope>
+		</dependency>
+	</dependencies>
+
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<version>2.4</version>
+				<executions>
+					<execution>
+						<id>unpack-webxml</id>
+						<phase>generate-resources</phase>
+						<goals>
+							<goal>unpack</goal>
+						</goals>
+						<configuration>
+							<artifactItems>
+								<artifactItem>
+									<groupId>org.camunda.bpm.webapp</groupId>
+									<artifactId>camunda-webapp-ee-wls</artifactId>
+									<version>${camunda.version}</version>
+									<type>war</type>
+									<overWrite>true</overWrite>
+									<outputDirectory>${classes.dir}</outputDirectory>
+									<includes>**</includes>
+								</artifactItem>
+							</artifactItems>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>com.google.code.maven-config-processor-plugin</groupId>
+				<artifactId>maven-config-processor-plugin</artifactId>
+				<version>2.0</version>
+				<executions>
+					<execution>
+						<id>process-webxml</id>
+						<goals>
+							<goal>process</goal>
+						</goals>
+						<configuration>
+							<namespaceContexts>
+								<wls>http://xmlns.oracle.com/weblogic/weblogic-web-app</wls>
+								<jee>http://java.sun.com/xml/ns/javaee</jee>
+							</namespaceContexts>
+							<outputDirectory>${classes.dir}</outputDirectory>
+							<transformations>
+								<transformation>
+									<input>${classes.dir}/WEB-INF/weblogic.xml</input>
+									<output>WEB-INF/weblogic.xml</output>
+									<config>src/assembly/weblogic.updates.xml</config>
+								</transformation>
+								<transformation>
+									<input>${classes.dir}/WEB-INF/web.xml</input>
+									<output>WEB-INF/web.xml</output>
+									<config>src/assembly/web.updates.xml</config>
+								</transformation>
+							</transformations>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+
+				<configuration>
+          <warName>${artifactId}-${camunda.version}</warName>
+          
+					<webResources>
+						<resource>
+							<directory>${classes.dir}</directory>
+							<includes>
+								<include>**</include>
+							</includes>
+						</resource>
+					</webResources>
+				</configuration>
+			</plugin>
+
+		</plugins>
+	</build>
+
     <repositories>
         <repository>
             <id>camunda-bpm-nexus</id>
             <name>camunda-bpm-nexus</name>
-            <url>https://app.camunda.com/nexus/content/groups/public</url>
-        </repository>
-        <repository>
-            <id>jboss-public-repository</id>
-            <name>JBoss Repository</name>
-            <url>http://repository.jboss.org/nexus/content/groups/public</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
+            <url>https://app.camunda.com/nexus/content/repositories/camunda-bpm-ee</url>
         </repository>
     </repositories>
 
@@ -55,9 +164,9 @@
 
     <!-- replace YOUR_REPOSITORY_ID with your repository name -->
     <scm>
-        <connection>scm:git:git@github.com:camunda/camunda-jboss-sso.git</connection>
-        <url>scm:git:git@github.com:camunda/camunda-jboss-sso.git</url>
-        <developerConnection>scm:git:git@github.com:camunda/camunda-jboss-sso.git</developerConnection>
+        <connection>scm:git:git@github.com:camunda-consulting/camunda-sso-weblogic.git</connection>
+        <url>scm:git:git@github.com:camunda-consulting/camunda-sso-weblogic.git</url>
+        <developerConnection>scm:git:git@github.com:camunda-consulting/camunda-sso-weblogic.git</developerConnection>
         <tag>HEAD</tag>
     </scm>
 
