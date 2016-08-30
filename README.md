@@ -1,4 +1,4 @@
-# CamundaBPM SSO JBoss
+# Camunda BPM Webapp with SSO for JBoss AS7/Wildfly Server
 
 This project integrates a Single Sign On (SSO) mechanism into the CamundaBPM cockpit. The main mechanic is done by 
 the JBoss implementation. Therefore, it is needed to configure an Active Directory and the JBoss installation.
@@ -15,7 +15,7 @@ The camunda cockpit have to be secured.
 ### Technical Requirements
 
 * Windows Active Directory (AD)
-* JBoss AS7 / EAP 6
+* JBoss AS7 / Widlfly / EAP
 * AD User and Groups for integration in Camunda
 * Dedicated AD User for JBoss Service
 
@@ -32,6 +32,8 @@ The camunda cockpit have to be secured.
 ## Get started
 
 ### Configuration AD
+
+Have a look at the tutorial [How To Configure Browser-based SSO with Kerberos/SPNEGO and JBoss Application Server](https://access.redhat.com/documentation/en/red-hat-jboss-enterprise-application-platform/7.0/how-to-set-up-sso-with-kerberos/how-to-set-up-sso-with-kerberos/)
 
 A fully configured AD is needed, because the authentication needs users and groups. Therefore we use the test users 
 eh, TestUser, Administrator and the test group TestGroup. They can be created with the AD standard tooling of a windows 
