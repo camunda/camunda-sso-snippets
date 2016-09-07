@@ -31,6 +31,7 @@ public class AuthenticationFilter implements Filter {
     private static final String[] APPS = new String[] { "cockpit", "tasklist" };
     private static final String APP_MARK = "/app/";
 
+    @Override
     public void init(FilterConfig filterConfig) throws ServletException {
     }
 
@@ -92,7 +93,10 @@ public class AuthenticationFilter implements Filter {
                     }
                     authorizedApps.add("admin");
                     if (authorizedApps.contains(appName)) {
-                        UserAuthentication newAuthentication = new UserAuthentication(username, groupIds, engineName, authorizedApps);
+                        UserAuthentication newAuthentication = new UserAuthentication(username, engineName);
+                        newAuthentication.setGroupIds(groupIds);
+                        newAuthentication.setAuthorizedApps(authorizedApps);
+
                         authentications.addAuthentication(newAuthentication);
                     }
                 }
@@ -109,6 +113,10 @@ public class AuthenticationFilter implements Filter {
         return appInfo[1];
     }
 
+    /**
+     * Retrieve app name and engine name from URL,
+     * e.g. http://localhost:8080/camunda/app/tasklist/default/
+     */
     private String[] getAppInfo(String url) {
         String[] appInfo = null;
         if (url.endsWith("/")) {
@@ -124,10 +132,7 @@ public class AuthenticationFilter implements Filter {
         return appInfo;
     }
 
-    private boolean isApp(String url) {
-        return url.contains("/app/");
-    }
-
+    @Override
     public void doFilter(final ServletRequest request, final ServletResponse response, final FilterChain chain) throws IOException, ServletException {
         final HttpServletRequest req = (HttpServletRequest) request;
 
@@ -163,6 +168,7 @@ public class AuthenticationFilter implements Filter {
         }
     }
 
+    @Override
     public void destroy() {
 
     }
