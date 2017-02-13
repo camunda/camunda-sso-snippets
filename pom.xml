@@ -63,6 +63,7 @@
 
 
 	<build>
+		<defaultGoal>clean install</defaultGoal>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -132,6 +133,11 @@
 				<configuration>
           <warName>${artifactId}-${camunda.version}</warName>
           
+                    <archive>
+                        <manifestEntries>
+                            <Dependencies>org.camunda.bpm.camunda-engine</Dependencies>
+                        </manifestEntries>
+                    </archive>
 					<webResources>
 						<resource>
 							<directory>${classes.dir}</directory>
