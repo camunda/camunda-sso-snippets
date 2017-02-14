@@ -211,7 +211,7 @@ client. It is needed to add the specific AD configuration information.
 [appdefaults]
     validate=false
 [domain_realm]
-    novadDmain.local = "NOVADOMAIN.LOCAL"
+    novaDomain.local = "NOVADOMAIN.LOCAL"
     .novaDomain.local = "NOVADOMAIN.LOCAL"
 [libdefaults]
     ticket_lifetime = 600
