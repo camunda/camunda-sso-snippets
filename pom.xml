@@ -105,16 +105,10 @@
 						</goals>
 						<configuration>
 							<namespaceContexts>
-								<wls>http://xmlns.oracle.com/weblogic/weblogic-web-app</wls>
 								<jee>http://java.sun.com/xml/ns/javaee</jee>
 							</namespaceContexts>
 							<outputDirectory>${classes.dir}</outputDirectory>
 							<transformations>
-								<transformation>
-									<input>${classes.dir}/WEB-INF/weblogic.xml</input>
-									<output>WEB-INF/weblogic.xml</output>
-									<config>src/assembly/weblogic.updates.xml</config>
-								</transformation>
 								<transformation>
 									<input>${classes.dir}/WEB-INF/web.xml</input>
 									<output>WEB-INF/web.xml</output>
