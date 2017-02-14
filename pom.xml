@@ -133,9 +133,7 @@
           <warName>${artifactId}-${camunda.version}</warName>
           
                     <archive>
-                        <manifestEntries>
-                            <Dependencies>org.camunda.bpm.camunda-engine</Dependencies>
-                        </manifestEntries>
+                        <manifestFile>${classes.dir}/META-INF/MANIFEST.MF</manifestFile>
                     </archive>
 					<webResources>
 						<resource>
