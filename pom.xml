@@ -11,7 +11,7 @@
 
     <properties>
         <classes.dir>${build.directory}/extracted-camunda-webapp</classes.dir>
-        <camunda.version>7.5.0</camunda.version>
+        <camunda.version>7.6.0</camunda.version>
     </properties>
 
     <parent>
@@ -113,6 +113,11 @@
 									<input>${classes.dir}/WEB-INF/web.xml</input>
 									<output>WEB-INF/web.xml</output>
 									<config>src/assembly/web.updates.xml</config>
+								</transformation>
+								<transformation>
+									<input>${classes.dir}/WEB-INF/jboss-deployment-structure.xml</input>
+									<output>WEB-INF/jboss-deployment-structure.xml</output>
+									<config>src/assembly/jboss-deployment-structure.updates.xml</config>
 								</transformation>
 							</transformations>
 						</configuration>
