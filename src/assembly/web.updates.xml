@@ -16,7 +16,7 @@
 		<url-pattern>/*</url-pattern>
 	</web-resource-collection>
 	<auth-constraint>
-            <role-name>CN=TestGroup,CN=Users,DC=novaDomain,DC=local</role-name>
+            <role-name>*</role-name>
 	</auth-constraint>
 	<user-data-constraint>
 		<transport-guarantee>NONE</transport-guarantee>
