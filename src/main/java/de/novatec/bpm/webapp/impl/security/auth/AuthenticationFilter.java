@@ -37,45 +37,60 @@ public class AuthenticationFilter extends org.camunda.bpm.webapp.impl.security.a
             for (Authentication aut : authentications.getAuthentications()) {
                 if (aut.getName() == principal.getName()) {
                     // already in the list - nothing to do
+//                    System.out.println(((HttpServletRequest) request).getSession().getId() + " already authorized.");
                     return;
                 }
             }
             String url = req.getRequestURL().toString();
             String[] appInfo = getAppInfo(url);
 
-            if (appInfo != null) {
-                String engineName = getEngineName(appInfo);
-                String appName = getAppName(appInfo);
+            String engineName = getEngineName(appInfo);
+            String username = principal.getName();
 
-                new ContainerBasedUserAuthenticationResource().doLogin(engineName, username, authentications);
-            }
+            new ContainerBasedUserAuthenticationResource().doLogin(engineName, username, authentications);
+            
+//            System.out.println(((HttpServletRequest) request).getSession().getId() + " " + username + " " + engineName);
+//        } else {
+//          System.out.println(((HttpServletRequest) request).getSession().getId() + " no user provided from application server!");
         }
-
     }
 
-    private String getAppName(String[] appInfo) {
-        return appInfo[0];
-    }
-
-    private String getEngineName(String[] appInfo) {
-        return appInfo[1];
+    protected String getEngineName(String[] appInfo) {
+        if (appInfo != null && appInfo.length >= 2) {
+          return appInfo[1];
+        } else {
+          return "default";
+        }
     }
 
     /**
      * Retrieve app name and engine name from URL,
      * e.g. http://localhost:8080/camunda/app/tasklist/default/
+     * 
+     * TODO detect engine name for API calls,
+     * e.g. http://localhost:8080/camunda/api/engine/engine/default/process-definition
+     * or http://localhost:8080/camunda/api/cockpit/plugin/base/default/process-definition/invoice:2:b613aca2-71ed-11e7-8f37-0242d5fdf76e/called-process-definitions
+     * 
+     * Currently, API requests will always be authorized using the
+     * process engine named "default". 
      */
-    private String[] getAppInfo(String url) {
+    protected String[] getAppInfo(String url) {
         String[] appInfo = null;
-        if (url.endsWith("/")) {
-            int index = url.indexOf(APP_MARK);
-            if (index >= 0) {
-                String apps = url.substring(index + APP_MARK.length(), url.length() - 1);
-                String[] aa = apps.split("/");
-                if (aa.length == 2) {
-                    appInfo = aa;
-                }
+        int index = url.indexOf(APP_MARK);
+        if (index >= 0) {
+          try {
+            String apps = url.substring(index + APP_MARK.length(), url.length() - 1);
+            String[] aa = apps.split("/");
+            if (aa.length >= 1) {
+              if (url.endsWith("/")) {
+                appInfo = aa;
+              } else {
+                appInfo = new String[]{aa[0]};
+              }
             }
+          } catch (StringIndexOutOfBoundsException e) {
+            
+          }
         }
         return appInfo;
     }
