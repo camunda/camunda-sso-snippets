@@ -64,6 +64,7 @@
 
 	<build>
 		<defaultGoal>clean install</defaultGoal>
+		<finalName>${artifactId}-${camunda.version}</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -130,8 +131,6 @@
 				<artifactId>maven-war-plugin</artifactId>
 
 				<configuration>
-          <warName>${artifactId}-${camunda.version}</warName>
-          
                     <archive>
                         <manifestFile>${classes.dir}/META-INF/MANIFEST.MF</manifestFile>
                     </archive>
