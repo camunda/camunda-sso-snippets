@@ -4,19 +4,14 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.camunda.bpm.extension</groupId>
-    <artifactId>camunda-bpm-sso-jboss</artifactId>
+    <artifactId>camunda-webapp-jboss-sso</artifactId>
     <version>1.0.0-SNAPSHOT</version>
 
-    <modules>
-        <module>camunda-bpm-repackage-webapp</module>
-		<module>camunda-bpm-build-webapp</module>
-    </modules>
-
-    <packaging>pom</packaging>
+	<packaging>war</packaging>
 
     <properties>
         <classes.dir>${build.directory}/extracted-camunda-webapp</classes.dir>
-        <camunda.version>7.2.0</camunda.version>
+        <camunda.version>7.6.0</camunda.version>
     </properties>
 
     <parent>
@@ -25,6 +20,152 @@
         <version>2.5</version>
         <relativePath/>
     </parent>
+
+	<dependencies>
+
+		<dependency>
+			<groupId>org.jboss.spec</groupId>
+			<artifactId>jboss-javaee-web-6.0</artifactId>
+			<version>3.0.2.Final</version>
+			<type>pom</type>
+			<scope>provided</scope>
+			<exclusions>
+				<exclusion>
+					<artifactId>xalan</artifactId>
+					<groupId>org.apache.xalan</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<dependency>
+			<groupId>org.camunda.bpm.webapp</groupId>
+			<artifactId>camunda-webapp</artifactId>
+			<version>${camunda.version}</version>
+      <classifier>classes</classifier>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.camunda.bpm</groupId>
+			<artifactId>camunda-engine-rest</artifactId>
+			<classifier>classes</classifier>
+			<version>${camunda.version}</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.camunda.bpm</groupId>
+			<artifactId>camunda-engine</artifactId>
+			<version>${camunda.version}</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.12</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
+
+	<build>
+		<defaultGoal>clean install</defaultGoal>
+		<finalName>${artifactId}-${camunda.version}</finalName>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<version>2.4</version>
+				<executions>
+					<execution>
+						<id>unpack-webxml</id>
+						<phase>generate-resources</phase>
+						<goals>
+							<goal>unpack</goal>
+						</goals>
+						<configuration>
+							<artifactItems>
+								<artifactItem>
+									<groupId>org.camunda.bpm.webapp</groupId>
+									<artifactId>camunda-webapp-jboss</artifactId>
+									<version>${camunda.version}</version>
+									<type>war</type>
+									<overWrite>true</overWrite>
+									<outputDirectory>${classes.dir}</outputDirectory>
+									<includes>**</includes>
+								</artifactItem>
+							</artifactItems>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>com.google.code.maven-config-processor-plugin</groupId>
+				<artifactId>maven-config-processor-plugin</artifactId>
+				<version>2.0</version>
+				<executions>
+					<execution>
+						<id>process-webxml</id>
+						<goals>
+							<goal>process</goal>
+						</goals>
+						<configuration>
+							<namespaceContexts>
+								<jee>http://java.sun.com/xml/ns/javaee</jee>
+							</namespaceContexts>
+							<outputDirectory>${classes.dir}</outputDirectory>
+							<transformations>
+								<transformation>
+									<input>${classes.dir}/WEB-INF/web.xml</input>
+									<output>WEB-INF/web.xml</output>
+									<config>src/assembly/web.updates.xml</config>
+								</transformation>
+								<transformation>
+									<input>${classes.dir}/WEB-INF/jboss-deployment-structure.xml</input>
+									<output>WEB-INF/jboss-deployment-structure.xml</output>
+									<config>src/assembly/jboss-deployment-structure.updates.xml</config>
+								</transformation>
+							</transformations>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+
+				<configuration>
+                    <archive>
+                        <manifestFile>${classes.dir}/META-INF/MANIFEST.MF</manifestFile>
+                    </archive>
+					<webResources>
+						<resource>
+							<directory>${classes.dir}</directory>
+							<includes>
+								<include>**</include>
+							</includes>
+						</resource>
+					</webResources>
+				</configuration>
+			</plugin>
+
+	      <plugin>
+	        <!-- Usage: mvn jboss-as:deploy See also: https://docs.jboss.org/jbossas/7/plugins/maven/latest/examples/deployment-example.html -->
+	        <groupId>org.jboss.as.plugins</groupId>
+	        <artifactId>jboss-as-maven-plugin</artifactId>
+	        <version>7.6.Final</version>
+	      </plugin>
+	      <plugin>
+	        <!-- Usage: mvn wildfly:deploy See also: https://docs.jboss.org/wildfly/plugins/maven/latest/examples/deployment-example.html -->
+	        <groupId>org.wildfly.plugins</groupId>
+	        <artifactId>wildfly-maven-plugin</artifactId>
+	        <version>1.0.2.Final</version>
+	      </plugin>
+		</plugins>
+	</build>
 
     <repositories>
         <repository>

@@ -1,0 +1,14 @@
+<processor>
+
+	<add>
+		<after>/jboss-deployment-structure/deployment/exclusions</after>
+		<value>
+            <![CDATA[
+    <dependencies>
+      <module name="org.jboss.security.negotiation" />
+    </dependencies>
+                ]]>
+		</value>
+	</add>
+    
+</processor>
