@@ -254,9 +254,8 @@ Install UnlimitedJCEPolicyJDK7.zip from oracle webpage into the jre/jdk installa
 
 ## Maintainer
 
-Eberhard Heber
-eberhardheber@novatec-gmbh.de
-
+- Eberhard Heber (eberhardheber@novatec-gmbh.de)
+- Falko Menge (falko.menge@camunda.com)
 
 ## License
 
