@@ -1,6 +1,6 @@
 # Camunda BPM Webapp with SSO for JBoss AS7/Wildfly Server
 
-This project integrates a Single Sign On (SSO) mechanism into the CamundaBPM cockpit. The main mechanic is done by 
+This project integrates a Single Sign On (SSO) mechanism into the Camunda BPM Webapp which contains Tasklist, Cockpit and Admin. The main mechanic is done by 
 the JBoss implementation. Therefore, it is needed to configure an Active Directory and the JBoss installation.
 
 ### Problem

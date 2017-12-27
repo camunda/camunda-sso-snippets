@@ -3,6 +3,9 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
+    <name>Camunda BPM Webapp with SSO for JBoss AS7/Wildfly Server</name>
+    <url>https://github.com/camunda/camunda-sso-jboss</url>
+
     <groupId>org.camunda.bpm.extension</groupId>
     <artifactId>camunda-webapp-jboss-sso</artifactId>
     <version>1.0.0-SNAPSHOT</version>
