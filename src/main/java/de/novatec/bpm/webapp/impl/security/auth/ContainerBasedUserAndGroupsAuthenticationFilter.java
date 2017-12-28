@@ -27,14 +27,21 @@ public class ContainerBasedUserAndGroupsAuthenticationFilter extends ContainerBa
 
   @Override
   protected void doLogin(Authentications authentications, String username, String engineName) {
+    // initialize with null, to allow fall back to identity service, if nothing provided by container
+    List<String> groupIds = null;
+
     // get user's groups
     AccessControlContext acc = AccessController.getContext();
     Subject subject = Subject.getSubject(acc);
-    Set<Principal> groupPrincipals = subject.getPrincipals();
-    // transform into array of strings:
-    List<String> groupIds = new ArrayList<String>();
-    for (Principal groupPrincipal : groupPrincipals) {
-      groupIds.add(groupPrincipal.getName());
+    if (subject != null) {
+      Set<Principal> groupPrincipals = subject.getPrincipals();
+      if (groupPrincipals != null && !groupPrincipals.isEmpty()) {
+        // transform into array of strings:
+        groupIds = new ArrayList<String>();
+        for (Principal groupPrincipal : groupPrincipals) {
+          groupIds.add(groupPrincipal.getName());
+        }
+      }
     }
 
     new ContainerBasedUserAuthenticationResource().doLogin(engineName, username, authentications, groupIds);
