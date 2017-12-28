@@ -7,6 +7,7 @@ import java.util.List;
 import javax.ws.rs.core.Response.Status;
 
 import org.camunda.bpm.engine.AuthorizationService;
+import org.camunda.bpm.engine.IdentityService;
 import org.camunda.bpm.engine.ProcessEngine;
 import org.camunda.bpm.engine.rest.exception.InvalidRequestException;
 import org.camunda.bpm.webapp.impl.security.auth.Authentications;
@@ -16,7 +17,7 @@ import org.camunda.bpm.webapp.impl.security.auth.UserAuthenticationResource;
 /**
  * Helper class to perform a login of a user that has already been
  * authenticated by the application server.
- * 
+ *
  * @author Falko Menge
  */
 public class ContainerBasedUserAuthenticationResource extends UserAuthenticationResource {
@@ -27,6 +28,23 @@ public class ContainerBasedUserAuthenticationResource extends UserAuthentication
   public static final String[] APPS = new String[] { "cockpit", "tasklist", "admin"};
 
   /**
+   * Login a user that has already been authenticated.
+   *
+   * @param engineName Name of the engine to login to
+   * @param username Id of the authenticated user
+   * @param authentications Current authentications from the session
+   */
+  public void doLogin(
+      String engineName,
+      String username,
+      Authentications authentications) {
+    doLogin(engineName, username, authentications, null);
+  }
+
+  /**
+   * Login a user that has already been authenticated and
+   * optionally provide its groups.
+   *
    * This method is a copy of {@link UserAuthenticationResource#doLogin(String, String, String, String)}
    * except that it neither checks the password nor for application permissions
    * and works on a given list of authentications.
@@ -38,12 +56,19 @@ public class ContainerBasedUserAuthenticationResource extends UserAuthentication
    * 
    * It should be kept in sync with the latest version from Camunda,
    * e.g. by doing a diff between the Java files.
-   * Hint: Ignore whitespace when doing the diff. 
+   * Hint: Ignore whitespace when doing the diff.
+   *
+   * @param engineName Name of the engine to login to
+   * @param username Id of the authenticated user
+   * @param authentications Current authentications from the session
+   * @param groupIds Groups of the authenticated user
+   *   If groupIds is null, they will be retrieved from the {@link IdentityService}.
    */
   public void doLogin(
       String engineName,
       String username,
-      Authentications authentications) {
+      Authentications authentications,
+      List<String> groupIds) {
 
     final ProcessEngine processEngine = lookupProcessEngine(engineName);
     if(processEngine == null) {
@@ -53,7 +78,8 @@ public class ContainerBasedUserAuthenticationResource extends UserAuthentication
     // make sure authentication is executed without authentication :)
     processEngine.getIdentityService().clearAuthentication();
 
-    List<String> groupIds = getGroupsOfUser(processEngine, username);
+    if (groupIds == null)
+      groupIds = getGroupsOfUser(processEngine, username);
     List<String> tenantIds = getTenantsOfUser(processEngine, username);
 
     // check user's app authorizations

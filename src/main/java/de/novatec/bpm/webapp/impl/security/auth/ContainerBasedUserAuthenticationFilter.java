@@ -13,20 +13,25 @@ import javax.servlet.http.HttpServletRequest;
 import org.camunda.bpm.webapp.impl.security.SecurityActions;
 import org.camunda.bpm.webapp.impl.security.SecurityActions.SecurityAction;
 import org.camunda.bpm.webapp.impl.security.auth.Authentication;
+import org.camunda.bpm.webapp.impl.security.auth.AuthenticationFilter;
 import org.camunda.bpm.webapp.impl.security.auth.Authentications;
 import org.camunda.bpm.webapp.impl.security.auth.UserAuthenticationResource;
 
 /**
- * This security filter maps the user provided by the application server
- * to the Camunda user and group management.
+ * This Servlet filter relies on the Servlet container (application server) to
+ * authenticate a user and only forward a request to the application upon
+ * successful authentication.
  * 
- * It is largely based on code from {@link org.camunda.bpm.webapp.impl.security.auth.AuthenticationFilter}
- * and {@link UserAuthenticationResource}. 
+ * It passes the username provided by the container through the Servlet API into
+ * the Servlet session used by the Camunda REST API.
+ *
+ * The implementation is largely based on code from {@link AuthenticationFilter}
+ * and {@link UserAuthenticationResource}.
  *
  * @author Eberhard Heber
  * @author Falko Menge
  */
-public class ContainerBasedUserAuthenticationFilter extends org.camunda.bpm.webapp.impl.security.auth.AuthenticationFilter {
+public class ContainerBasedUserAuthenticationFilter extends AuthenticationFilter {
 
     protected static final String APP_MARK = "/app/";
 
@@ -44,12 +49,16 @@ public class ContainerBasedUserAuthenticationFilter extends org.camunda.bpm.weba
         }
         String engineName = getEngineName(request);
         
-        new ContainerBasedUserAuthenticationResource().doLogin(engineName, username, authentications);
+        doLogin(authentications, username, engineName);
         
         LOGGER.fine(request.getSession().getId() + " " + username + " " + engineName);
       } else {
         LOGGER.fine(request.getSession().getId() + " no user provided from application server!");
       }
+    }
+
+    protected void doLogin(Authentications authentications, String username, String engineName) {
+      new ContainerBasedUserAuthenticationResource().doLogin(engineName, username, authentications);
     }
 
     protected String getUserName(final HttpServletRequest request) {
