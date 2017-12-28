@@ -2,7 +2,7 @@
 	<!-- change AuthenticationFilter to novatec filter -->    
     <modify>
     	<name>/jee:web-app/jee:filter/jee:filter-class[text()="org.camunda.bpm.webapp.impl.security.auth.AuthenticationFilter"]</name>
-    	<value><![CDATA[<filter-class>de.novatec.bpm.webapp.impl.security.auth.AuthenticationFilter</filter-class>]]></value>
+    	<value><![CDATA[<filter-class>de.novatec.bpm.webapp.impl.security.auth.ContainerBasedUserAuthenticationFilter</filter-class>]]></value>
     </modify> 
 	
 	<!-- add security constraint after updated AuthenticationFilter -->

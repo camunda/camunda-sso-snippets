@@ -26,11 +26,11 @@ import org.camunda.bpm.webapp.impl.security.auth.UserAuthenticationResource;
  * @author Eberhard Heber
  * @author Falko Menge
  */
-public class AuthenticationFilter extends org.camunda.bpm.webapp.impl.security.auth.AuthenticationFilter {
+public class ContainerBasedUserAuthenticationFilter extends org.camunda.bpm.webapp.impl.security.auth.AuthenticationFilter {
 
     protected static final String APP_MARK = "/app/";
 
-    private final Logger LOGGER = Logger.getLogger(AuthenticationFilter.class.getName());
+    private final Logger LOGGER = Logger.getLogger(ContainerBasedUserAuthenticationFilter.class.getName());
 
     protected void setKnownPrinicipal(final HttpServletRequest request, Authentications authentications) {
       String username = getUserName(request);

@@ -39,7 +39,7 @@ public class AuthenticationFilterTest {
 
   @Test
   public void testUrlParsing() {
-    AuthenticationFilter filter = new AuthenticationFilter();
+    ContainerBasedUserAuthenticationFilter filter = new ContainerBasedUserAuthenticationFilter();
     String[] appInfo = filter.getAppInfo(url);
     assertEquals(engineName, filter.getEngineName(appInfo));
   }
