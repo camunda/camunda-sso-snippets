@@ -2,6 +2,7 @@ package de.novatec.bpm.webapp.impl.security.auth;
 
 import java.io.IOException;
 import java.security.Principal;
+import java.util.logging.Logger;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -27,32 +28,39 @@ import org.camunda.bpm.webapp.impl.security.auth.UserAuthenticationResource;
  */
 public class AuthenticationFilter extends org.camunda.bpm.webapp.impl.security.auth.AuthenticationFilter {
 
-    private static final String APP_MARK = "/app/";
+    protected static final String APP_MARK = "/app/";
 
-    protected void setKnownPrinicipal(final ServletRequest request, Authentications authentications) {
-        final HttpServletRequest req = (HttpServletRequest) request;
+    private final Logger LOGGER = Logger.getLogger(AuthenticationFilter.class.getName());
 
-        Principal principal = req.getUserPrincipal();
-        if (principal != null && principal.getName() != null && !principal.getName().isEmpty()) {
-            for (Authentication aut : authentications.getAuthentications()) {
-                if (aut.getName() == principal.getName()) {
-                    // already in the list - nothing to do
-//                    System.out.println(((HttpServletRequest) request).getSession().getId() + " already authorized.");
-                    return;
-                }
-            }
-            String url = req.getRequestURL().toString();
-            String[] appInfo = getAppInfo(url);
-
-            String engineName = getEngineName(appInfo);
-            String username = principal.getName();
-
-            new ContainerBasedUserAuthenticationResource().doLogin(engineName, username, authentications);
-            
-//            System.out.println(((HttpServletRequest) request).getSession().getId() + " " + username + " " + engineName);
-//        } else {
-//          System.out.println(((HttpServletRequest) request).getSession().getId() + " no user provided from application server!");
+    protected void setKnownPrinicipal(final HttpServletRequest request, Authentications authentications) {
+      String username = getUserName(request);
+      if (username != null && !username.isEmpty()) {
+        for (Authentication auth : authentications.getAuthentications()) {
+          if (username.equals(auth.getName())) {
+            // already in the list - nothing to do
+            LOGGER.fine(request.getSession().getId() + " already authorized.");
+            return;
+          }
         }
+        String engineName = getEngineName(request);
+        
+        new ContainerBasedUserAuthenticationResource().doLogin(engineName, username, authentications);
+        
+        LOGGER.fine(request.getSession().getId() + " " + username + " " + engineName);
+      } else {
+        LOGGER.fine(request.getSession().getId() + " no user provided from application server!");
+      }
+    }
+
+    protected String getUserName(final HttpServletRequest request) {
+      Principal principal = request.getUserPrincipal();
+      return principal != null ? principal.getName() : null;
+    }
+
+    protected String getEngineName(final HttpServletRequest request) {
+      String url = request.getRequestURL().toString();
+      String[] appInfo = getAppInfo(url);
+      return getEngineName(appInfo);
     }
 
     protected String getEngineName(String[] appInfo) {
@@ -108,7 +116,7 @@ public class AuthenticationFilter extends org.camunda.bpm.webapp.impl.security.a
 
         // get authentication from session
         Authentications authentications = Authentications.getFromSession(req.getSession());
-        setKnownPrinicipal(request, authentications);
+        setKnownPrinicipal(req, authentications);
         Authentications.setCurrent(authentications);
         try {
 

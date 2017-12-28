@@ -22,9 +22,9 @@ import org.camunda.bpm.webapp.impl.security.auth.UserAuthenticationResource;
 public class ContainerBasedUserAuthenticationResource extends UserAuthenticationResource {
 
   /**
-   * Copied from {@link UserAuthenticationResource#APPS}
+   * Copied from {@link UserAuthenticationResource#APPS} because its private.
    */
-  private static final String[] APPS = new String[] { "cockpit", "tasklist", "admin"};
+  public static final String[] APPS = new String[] { "cockpit", "tasklist", "admin"};
 
   /**
    * This method is a copy of {@link UserAuthenticationResource#doLogin(String, String, String, String)}
