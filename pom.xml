@@ -126,6 +126,11 @@
 									<config>src/assembly/web.updates.xml</config>
 								</transformation>
 								<transformation>
+									<input>${classes.dir}/WEB-INF/jboss-web.xml</input>
+									<output>WEB-INF/jboss-web.xml</output>
+									<config>src/assembly/jboss-web.updates.xml</config>
+								</transformation>
+								<transformation>
 									<input>${classes.dir}/WEB-INF/jboss-deployment-structure.xml</input>
 									<output>WEB-INF/jboss-deployment-structure.xml</output>
 									<config>src/assembly/jboss-deployment-structure.updates.xml</config>

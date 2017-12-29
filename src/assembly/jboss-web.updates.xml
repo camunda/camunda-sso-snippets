@@ -1,0 +1,20 @@
+<processor>
+	<!-- change security domain to SPNEGO -->
+    <modify>
+    	<name>/jboss-web/security-domain/text()</name>
+    	<value>java:/jaas/SPNEGO</value>
+    </modify>
+
+	<!-- add NegotiationAuthenticator after security domain -->
+	<add>
+		<after>/jboss-web/security-domain</after>
+		<value>
+            <![CDATA[
+    <valve>
+        <class-name>org.jboss.security.negotiation.NegotiationAuthenticator</class-name>
+    </valve>
+            ]]>
+		</value>
+	</add>
+
+</processor>
