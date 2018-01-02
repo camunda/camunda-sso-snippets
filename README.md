@@ -1,15 +1,49 @@
-# Camunda BPM Webapp with SSO for JBoss AS7/Wildfly Server
+# Camunda BPM Webapp with SSO for JBoss AS7/Wildfly Server (Container-based Authentication)
 
-This project integrates a Single Sign On (SSO) mechanism into the Camunda BPM Webapp which contains Tasklist, Cockpit and Admin. The main mechanic is done by 
-the JBoss implementation. Therefore, it is needed to configure an Active Directory and the JBoss installation.
+This project adds Single Sign On (SSO) support to the [Camunda BPM Webapp](https://docs.camunda.org/manual/latest/webapps/), which contains Tasklist, Cockpit and Admin.
+Fortunately, application servers can do the actual authentication of a user before a request is forwarded to the application.
+The only thing that needs to be done inside the Camunda REST API, is to take the user id and optionally also the group ids provided by the container through the Servlet API and put them into the Servlet session of the REST API.
+Thats why we also call this Container-based Authentication.
+
+As a particular example, this project shows how to do SSO with Kerberos/Active Directory and Wildfly.
+However, the [Container-based Authentication Filter](src/main/java/de/novatec/bpm/webapp/impl/security/auth/ContainerBasedUserAuthenticationFilter.java)
+is only using the standard Servlet and Java Security APIs.
+Therefore it works exactly the same on all Servlet containers and with any authentication mechanism supported by the container.
+
+There are two variations of the Authentication Filter:
+One [takes the user's groups from the Camunda IdentityService](src/main/java/de/novatec/bpm/webapp/impl/security/auth/ContainerBasedUserAuthenticationFilter.java)
+and requires the LDAP plugin or another identity provider.
+The other one [takes the groups from the container](src/main/java/de/novatec/bpm/webapp/impl/security/auth/ContainerBasedUserAndGroupsAuthenticationFilter.java)
+and leverages, e.g. an LDAP support inside the container. However, it falls back to the Camunda IdentityService of the container doesn't provide groups.
+
+The project also shows how to configure the Camund Webapp in a way that allows for smooth updates to future Camunda BPM versions.
+The [config-processor-maven-plugin](https://github.com/lehphyro/maven-config-processor-plugin)
+helps to gently modify the original deployment decriptors
+[web.xml](src/assembly/web.updates.xml),
+[jboss-web.xml](src/assembly/jboss-web.updates.xml)
+and [jboss-deployment-structure.xml](src/assembly/jboss-deployment-structure.updates.xml)
+provided inside Camunda binary packages.
+
+
+## Variations (Branches)
+
+This Git repository contains different [branches](https://github.com/camunda/camunda-sso-jboss/branches) with slight variations of the implementation:
+
+- [enterprise-edition](https://github.com/camunda/camunda-sso-jboss/tree/enterprise-edition): uses correct dependencies to build a Camunda Webapp that conatains the Enterprise Edition features
+- [local-test-basic-auth](https://github.com/camunda/camunda-sso-jboss/tree/local-test-basic-auth): uses HTTP Basic Authentication for local testing without Kerberos/Active Directory server
+- [local-test-basic-auth-ee](https://github.com/camunda/camunda-sso-jboss/tree/local-test-basic-auth-ee): combines both of the above mentioned branches for local testing
+- [local-test-basic-auth-groups](https://github.com/camunda/camunda-sso-jboss/tree/local-test-basic-auth-groups): uses HTTP Basic Authentication for local testing of the filter that gets the user's groups from the container
+
+
+## Documentation
 
 ### Problem
 
-The camunda cockpit have to be secured.
+The Camunda BPM Webapp has to be secured.
 
 ### Business Requirements
 
-* Login once via a SSO mechanic
+* Login once via a SSO mechanism
 * Security has to be implemented by standard JBoss configuration
 
 ### Technical Requirements
@@ -27,7 +61,7 @@ The camunda cockpit have to be secured.
 ### Acceptance tests
 
 * AD User can login into CamundaBPM
-* All GUIs and Restapis are only accessible via AD Login
+* All GUIs and REST APIs are only accessible via AD Login
 
 ## Get started
 
@@ -234,13 +268,42 @@ client. It is needed to add the specific AD configuration information.
 The standard JRE/JDK only supports a standard encryption of 128 bit. For getting more security install the other policys.
 Install UnlimitedJCEPolicyJDK7.zip from oracle webpage into the jre/jdk installation dir.
 
+## External Documentation Links
+
+- [EAP 7.0 > How to Configure Server Security > Chapter 2. Securing the Server and Its Interfaces > 2.2.2. Configure the Management Interfaces for HTTPS > Create a keystore to secure the management interfaces](https://access.redhat.com/documentation/en/red-hat-jboss-enterprise-application-platform/7.0/paged/how-to-configure-server-security/chapter-2-securing-the-server-and-its-interfaces#create_a_keystore_to_secure_the_management_interfaces)
+
+- [EAP 7.0: How to Set Up SSO with Kerberos](https://access.redhat.com/documentation/en/red-hat-jboss-enterprise-application-platform/7.0/how-to-set-up-sso-with-kerberos/how-to-set-up-sso-with-kerberos)
+
+- [EAP 7.0: How to Configure Identity Management](https://access.redhat.com/documentation/en/red-hat-jboss-enterprise-application-platform/7.0/paged/how-to-configure-identity-management/)
+
+- [EAP 7.0: Configuration Guide](https://access.redhat.com/documentation/en/red-hat-jboss-enterprise-application-platform/7.0/paged/configuration-guide/)
+
+- [EAP 7.0](https://access.redhat.com/documentation/en/red-hat-jboss-enterprise-application-platform?version=7.0)
+
+- [JBoss Negotiation Toolkit](https://repository.jboss.org/org/jboss/security/jboss-negotiation-toolkit/)
+
+- [Steps to configure Kerberos / SPNEGO / NTLM authentication with Weblogic Server running on Oracle JDK](https://blogs.oracle.com/blogbypuneeth/entry/configure_kerberos_with_weblogic_server)
+
+- [EAP 7.0: Security Architecture](https://access.redhat.com/documentation/en-us/red_hat_jboss_enterprise_application_platform/7.0/html-single/security_architecture/)
+    - > "A security realm is effectively an identity store of usernames, passwords, and group membership information"
+    - > "A security domain is a set of Java Authentication and Authorization Service (JAAS) declarative security configurations that one or more applications use to control authentication, authorization, auditing, and mapping."
+    - > "Web applications and EJB deployments can only use security domains directly."
+    - > "Security mapping adds the ability to combine authentication and authorization information after the authentication or authorization happens but before the information is passed to your application."
+    - > "The JBoss EAP security subsystem is actually based on the JAAS API."
+- [Oracle Java EE 7 Tutorial: Securing Web Applications](https://docs.oracle.com/javaee/7/tutorial/security-webtier002.htm#GKBAA)
+    - > "If there is no authorization constraint, the container must accept the request without requiring user authentication."
+    - > "If there is an authorization constraint but no roles are specified within it, the container will not allow access to constrained requests under any circumstances."
+    - > "Each role name specified here must either correspond to the role name of one of the security-role elements defined for this web application or be the specially reserved role name *, which indicates all roles in the web application."
+    - > "The roles defined for the application must be mapped to users and groups defined on the server, except when default principal-to-role mapping is used."
+
+
 ## Resources
 
-* [Issue Tracker](link-to-issue-tracker) _use github unless you got your own_
-* [Roadmap](link-to-issue-tracker-filter) _if in terms of tagged issues_
-* [Changelog](link-to-changelog) _lets users track progress on what has been happening_
-* [Download](link-to-downloadable-archive) _if downloadable_
-* [Contributing](link-to-contribute-guide) _if desired, best to put it into a CONTRIBUTE.md file_
+* [Issue Tracker](https://github.com/camunda/camunda-sso-jboss/issues)
+* [Roadmap](https://github.com/camunda/camunda-sso-jboss#roadmap)
+* [Changelog](https://github.com/camunda/camunda-sso-jboss/commits/master)
+* [Download](https://github.com/camunda/camunda-sso-jboss/archive/master.zip)
+* [Contributing](https://help.github.com/articles/about-pull-requests/)
 
 
 ## Roadmap
