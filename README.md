@@ -1,4 +1,4 @@
-# Camunda BPM Webapp with SSO for JBoss AS7/Wildfly Server (Container-based Authentication)
+# Single Sign-on for Camunda BPM Webapp on Wildfly/JBoss AS7 (Container-based Authentication)
 
 This project adds Single Sign On (SSO) support to the [Camunda BPM Webapp](https://docs.camunda.org/manual/latest/webapps/), which contains Tasklist, Cockpit and Admin.
 Fortunately, application servers can do the actual authentication of a user before a request is forwarded to the application.
@@ -9,6 +9,7 @@ As a particular example, this project shows how to do SSO with Kerberos/Active D
 However, the [Container-based Authentication Filter](src/main/java/de/novatec/bpm/webapp/impl/security/auth/ContainerBasedUserAuthenticationFilter.java)
 is only using the standard Servlet and Java Security APIs.
 Therefore it works exactly the same on all Servlet containers and with any authentication mechanism supported by the container.
+For example the [fork for Single Sign-on on Weblogic](https://github.com/camunda-consulting/camunda-sso-weblogic/) uses the same Java code.
 
 There are two variations of the Authentication Filter:
 One [takes the user's groups from the Camunda IdentityService](src/main/java/de/novatec/bpm/webapp/impl/security/auth/ContainerBasedUserAuthenticationFilter.java)
