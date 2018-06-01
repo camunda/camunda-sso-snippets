@@ -34,7 +34,7 @@ This Git repository contains different [branches](https://github.com/camunda/cam
 - [local-test-basic-auth](https://github.com/camunda/camunda-sso-jboss/tree/local-test-basic-auth): uses HTTP Basic Authentication for local testing without Kerberos/Active Directory server
 - [local-test-basic-auth-ee](https://github.com/camunda/camunda-sso-jboss/tree/local-test-basic-auth-ee): combines both of the above mentioned branches for local testing
 - [local-test-basic-auth-groups](https://github.com/camunda/camunda-sso-jboss/tree/local-test-basic-auth-groups): uses HTTP Basic Authentication for local testing of the filter that gets the user's groups from the container
-
+- [keycloak](https://github.com/camunda/camunda-sso-jboss/tree/keycloak): uses keycloak as identity provider
 
 ## Documentation
 
