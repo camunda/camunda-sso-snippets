@@ -1,9 +1,22 @@
 <processor>
-	<!-- change AuthenticationFilter to novatec filter -->    
+	<!-- change AuthenticationFilter to ContainerBasedAuthentication filter -->
     <modify>
     	<name>/jee:web-app/jee:filter/jee:filter-class[text()="org.camunda.bpm.webapp.impl.security.auth.AuthenticationFilter"]</name>
-    	<value><![CDATA[<filter-class>de.novatec.bpm.webapp.impl.security.auth.ContainerBasedUserAuthenticationFilter</filter-class>]]></value>
-    </modify> 
+    	<value><![CDATA[<filter-class>org.camunda.bpm.webapp.impl.security.auth.ContainerBasedAuthenticationFilter</filter-class>]]></value>
+    </modify>
+
+	<!-- add AuthenticationProvider to updated filter -->
+	<add>
+		<inside>/jee:web-app/jee:filter[jee:filter-name = "Authentication Filter"]</inside>
+		<value>
+			<![CDATA[
+	<init-param>
+      <param-name>authentication-provider</param-name>
+      <param-value>org.camunda.bpm.engine.rest.security.auth.impl.ContainerBasedAuthenticationProvider</param-value>
+    </init-param>
+			]]>
+		</value>
+	</add>
 	
 	<!-- add security constraint after updated AuthenticationFilter -->
 	<add>
