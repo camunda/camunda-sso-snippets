@@ -1,24 +1,32 @@
 <processor>
-	<!-- change AuthenticationFilter to ContainerBasedAuthentication filter -->
-    <modify>
-    	<name>/jee:web-app/jee:filter/jee:filter-class[text()="org.camunda.bpm.webapp.impl.security.auth.AuthenticationFilter"]</name>
-    	<value><![CDATA[<filter-class>org.camunda.bpm.webapp.impl.security.auth.ContainerBasedAuthenticationFilter</filter-class>]]></value>
-    </modify>
 
-	<!-- add AuthenticationProvider to updated filter -->
+	<!-- add Container Based Authentication filter before Authentication filter -->
 	<add>
-		<inside>/jee:web-app/jee:filter[jee:filter-name = "Authentication Filter"]</inside>
+		<before>/jee:web-app/jee:filter[jee:filter-name = "Authentication Filter"]</before>
 		<value>
 			<![CDATA[
-	<init-param>
+	    <!-- Container Based Authentication filter -->
+    <filter>
+    <filter-name>Container Based Authentication Filter</filter-name>
+    <filter-class>org.camunda.bpm.webapp.impl.security.auth.ContainerBasedAuthenticationFilter</filter-class>
+    <init-param>
       <param-name>authentication-provider</param-name>
       <param-value>org.camunda.bpm.engine.rest.security.auth.impl.ContainerBasedAuthenticationProvider</param-value>
     </init-param>
+  </filter>
+  <filter-mapping>
+    <filter-name>Container Based Authentication Filter</filter-name>
+    <url-pattern>/*</url-pattern>
+    <dispatcher>REQUEST</dispatcher>
+  </filter-mapping>
+    <!-- Authentication filter -->
 			]]>
 		</value>
 	</add>
+
+
 	
-	<!-- add security constraint after updated AuthenticationFilter -->
+	<!-- add security constraint after AuthenticationFilter -->
 	<add>
 		<after>/jee:web-app/jee:filter[jee:filter-name = "Authentication Filter"]</after>
 		<value>
