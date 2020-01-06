@@ -1,0 +1,7 @@
+<processor>
+	<!-- change security domain to keycloak -->
+<!--     <modify> -->
+<!--     	<name>/jboss-web/security-domain/text()</name> -->
+<!--     	<value>keycloak</value> -->
+<!--     </modify> -->
+</processor>

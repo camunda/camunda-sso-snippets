@@ -1,0 +1,40 @@
+<processor>
+	<!-- change AuthenticationFilter to novatec filter -->    
+    <modify>
+    	<name>/jee:web-app/jee:filter/jee:filter-class[text()="org.camunda.bpm.webapp.impl.security.auth.AuthenticationFilter"]</name>
+    	<value><![CDATA[<filter-class>de.novatec.bpm.webapp.impl.security.auth.AuthenticationFilter</filter-class>]]></value>
+    </modify> 
+	
+	<!-- add security constraint after updated AuthenticationFilter -->
+	<add>
+		<after>/jee:web-app/jee:filter[jee:filter-name = "Authentication Filter"]</after>
+		<value>
+            <![CDATA[
+<security-constraint>
+	<web-resource-collection>
+		<web-resource-name>Restricted</web-resource-name>
+		<url-pattern>/app/*</url-pattern>
+		<http-method>POST</http-method>
+		<http-method>GET</http-method>
+	</web-resource-collection>
+	<auth-constraint>
+		<role-name>negotiateAdminRole</role-name>
+	</auth-constraint>
+	<user-data-constraint>
+		<description>no description</description>
+		<transport-guarantee>NONE</transport-guarantee>
+	</user-data-constraint>
+</security-constraint>
+<security-role>
+	<role-name>negotiateAdminRole</role-name>
+</security-role>
+
+<login-config>
+	<auth-method>BASIC</auth-method>
+	<realm-name>default</realm-name>
+</login-config>
+                ]]>
+		</value>
+	</add>
+    
+</processor>
