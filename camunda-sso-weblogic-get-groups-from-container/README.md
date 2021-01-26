@@ -1,6 +1,6 @@
-# Camunda BPM Webapp with SSO for Oracle WebLogic Server
+# Camunda Platform Webapp with SSO for Oracle WebLogic Server
 
-This project integrates a Single Sign On (SSO) mechanism into the CamundaBPM cockpit. The main mechanic is done by 
+This project integrates a Single Sign On (SSO) mechanism into the Camunda Platform cockpit. The main mechanic is done by 
 the WebLogic implementation. Therefore, it is needed to configure an Active Directory and the WebLogic installation.
 
 ### Problem
@@ -26,7 +26,7 @@ The camunda cockpit have to be secured.
 
 ### Acceptance tests
 
-* AD User can login into CamundaBPM
+* AD User can login into Camunda Platform
 * All GUIs and Restapis are only accessible via AD Login
 
 ## Get started

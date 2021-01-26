@@ -1,6 +1,6 @@
-# Single Sign-on for Camunda BPM Webapp on Wildfly/JBoss AS7 (Container-based Authentication)
+# Single Sign-on for Camunda Platform Webapp on Wildfly/JBoss AS7 (Container-based Authentication)
 
-This project adds Single Sign On (SSO) support to the [Camunda BPM Webapp](https://docs.camunda.org/manual/latest/webapps/), which contains Tasklist, Cockpit and Admin.
+This project adds Single Sign On (SSO) support to the [Camunda Platform Webapp](https://docs.camunda.org/manual/latest/webapps/), which contains Tasklist, Cockpit and Admin.
 
 As a particular example, this project shows how to do SSO with keycloak and Wildfly.
 
@@ -8,7 +8,7 @@ As a particular example, this project shows how to do SSO with keycloak and Wild
 
 ### Problem
 
-The Camunda BPM Webapp has to be secured.
+The Camunda Platform Webapp has to be secured.
 
 ### Business Requirements
 
@@ -27,7 +27,7 @@ The Camunda BPM Webapp has to be secured.
 
 ### Acceptance tests
 
-* Keycloak user can login into CamundaBPM
+* Keycloak user can login into Camunda Platform
 * All GUIs and REST APIs are only accessible via Keycloak Login
 
 ## Get started

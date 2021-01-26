@@ -1,6 +1,6 @@
-# Single Sign-on for Camunda BPM Webapp on Wildfly/JBoss AS7 (Container-based Authentication)
+# Single Sign-on for Camunda Platform Webapp on Wildfly/JBoss AS7 (Container-based Authentication)
 
-This project adds Single Sign On (SSO) support to the [Camunda BPM Webapp](https://docs.camunda.org/manual/latest/webapps/), which contains Tasklist, Cockpit and Admin.
+This project adds Single Sign On (SSO) support to the [Camunda Platform Webapp](https://docs.camunda.org/manual/latest/webapps/), which contains Tasklist, Cockpit and Admin.
 Fortunately, application servers can do the actual authentication of a user before a request is forwarded to the application.
 The only thing that needs to be done inside the Camunda REST API, is to take the user id and optionally also the group ids provided by the container through the Servlet API and put them into the Servlet session of the REST API.
 Thats why we also call this Container-based Authentication.
@@ -17,7 +17,7 @@ and requires the LDAP plugin or another identity provider.
 The other one [takes the groups from the container](src/main/java/de/novatec/bpm/webapp/impl/security/auth/ContainerBasedUserAndGroupsAuthenticationFilter.java)
 and leverages, e.g. an LDAP support inside the container. However, it falls back to the Camunda IdentityService of the container doesn't provide groups.
 
-The project also shows how to configure the Camund Webapp in a way that allows for smooth updates to future Camunda BPM versions.
+The project also shows how to configure the Camund Webapp in a way that allows for smooth updates to future Camunda Platform versions.
 The [config-processor-maven-plugin](https://github.com/lehphyro/maven-config-processor-plugin)
 helps to gently modify the original deployment decriptors
 [web.xml](src/assembly/web.updates.xml),
@@ -40,7 +40,7 @@ This Git repository contains different [branches](https://github.com/camunda/cam
 
 ### Problem
 
-The Camunda BPM Webapp has to be secured.
+The Camunda Platform Webapp has to be secured.
 
 ### Business Requirements
 
@@ -61,7 +61,7 @@ The Camunda BPM Webapp has to be secured.
 
 ### Acceptance tests
 
-* AD User can login into CamundaBPM
+* AD User can login into Camunda Platform
 * All GUIs and REST APIs are only accessible via AD Login
 
 ## Get started

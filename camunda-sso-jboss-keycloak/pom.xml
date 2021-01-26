@@ -3,7 +3,7 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<name>Camunda BPM Webapp with SSO for JBoss AS7/Wildfly Server</name>
+	<name>Camunda Platform Webapp with SSO for JBoss AS7/Wildfly Server</name>
 	<url>https://github.com/camunda/camunda-sso-jboss</url>
 
 	<groupId>org.camunda.bpm.extension</groupId>
@@ -222,12 +222,12 @@
 	<distributionManagement>
 		<repository>
 			<id>camunda-nexus</id>
-			<name>camunda bpm community extensions</name>
+			<name>Camunda Platform community extensions</name>
 			<url>https://app.camunda.com/nexus/content/repositories/camunda-bpm-community-extensions</url>
 		</repository>
 		<snapshotRepository>
 			<id>camunda-nexus</id>
-			<name>camunda bpm community extensions snapshots</name>
+			<name>Camunda Platform community extensions snapshots</name>
 			<url>https://app.camunda.com/nexus/content/repositories/camunda-bpm-community-extensions-snapshots</url>
 			<!-- for maven 2 compatibility -->
 			<uniqueVersion>true</uniqueVersion>
