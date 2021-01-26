@@ -12,7 +12,7 @@
             <![CDATA[
 <security-constraint>
 	<web-resource-collection>
-		<web-resource-name>Camunda BPM Webapp</web-resource-name>
+		<web-resource-name>Camunda Platform Webapp</web-resource-name>
 		<url-pattern>/*</url-pattern>
 	</web-resource-collection>
 	<auth-constraint>
